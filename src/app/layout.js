@@ -48,7 +48,7 @@ import "./globals.css";
 import ReduxProvider from "./components/reduxProvider";
 import { SidebarProvider } from "./context/sidebarContext";
 import AuthenticatedLayout from "./(auth)/layout";
-
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -73,7 +73,10 @@ export default function RootLayout({ children }) {
       >
         <ReduxProvider>
           <SidebarProvider>
-            <AuthenticatedLayout>{children}</AuthenticatedLayout>
+            <AuthenticatedLayout>
+              {children}
+              <Toaster position="top-right" />
+            </AuthenticatedLayout>
           </SidebarProvider>
         </ReduxProvider>
       </body>

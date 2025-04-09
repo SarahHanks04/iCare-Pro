@@ -13,7 +13,7 @@ export default function AddUserButton({ onUserAdded }) {
     <>
       <button
         onClick={handleOpenModal}
-        className="btn flex items-center gap-2 bg-[#11453B] text-[#F0F7EB80] hover:bg-[#11453B]/80"
+        className="btn flex items-center cursor-pointer gap-2 bg-[#11453B] text-[#F0F7EB80] hover:bg-[#11453B]/80"
       >
         <span className="text-lg">+</span>
         <span className="text-xs">Add User</span>

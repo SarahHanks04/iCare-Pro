@@ -43,13 +43,14 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       localStorage.setItem('token', action.payload.token);
       document.cookie = `authToken=${action.payload.token}; path=/; max-age=3600`;
-      console.log('Token set in cookie:', action.payload.token); // Add logging
+      console.log('Token set in cookie:', action.payload.token); 
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
       localStorage.removeItem('token');
+      localStorage.removeItem("mockedUsers");
       document.cookie = 'authToken=; path=/; max-age=0';
     },
   },

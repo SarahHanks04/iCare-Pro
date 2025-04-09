@@ -23,12 +23,20 @@ export const loginUser = async (email, password) => {
     return response.data;
   } catch (error) {
     console.error("Login error:", error.response?.data || error.message);
-    if (error.response && error.response.data?.error === "user not found") {
-      return {
-        token: `mock-token-${email}`,
-      };
+    // Check localStorage for mocked users
+    const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
+    const user = mockedUsers.find(
+      (u) => u.email === email && u.password === password
+    );
+    if (user) {
+      return { token: `mock-token-${email}` };
     }
-    throw new Error("Login failed. Please check your credentials.");
+    const errorMessage =
+      error.response?.data?.error === "user not found"
+        ? "User not found. Please register first."
+        : error.response?.data?.error ||
+          "Login failed. Please check your credentials.";
+    throw new Error(errorMessage);
   }
 };
 
@@ -43,15 +51,24 @@ export const registerUser = async (email, password) => {
       status: error.response?.status,
       message: error.message,
     });
-    // Only defined users succeed registration" error
+    // Only defined users succeed registration
     if (
       error.response &&
       error.response.data?.error ===
         "Note: Only defined users succeed registration"
     ) {
       console.log("Mocking successful registration for:", email);
+      const newUser = {
+        id: Math.floor(Math.random() * 1000).toString(),
+        email,
+        password, // In a real app, you should hash the password
+      };
+      // Store the mocked user in localStorage
+      const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
+      mockedUsers.push(newUser);
+      localStorage.setItem("mockedUsers", JSON.stringify(mockedUsers));
       return {
-        id: Math.floor(Math.random() * 1000),
+        id: newUser.id,
         token: `mock-token-${email}`,
       };
     }
@@ -82,8 +99,27 @@ export const getUsers = async () => {
 
 export const getUserById = async (id) => {
   try {
+    // Check localStorage first
+    const localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
+    const localUser = localUsers.find((user) => user.id === id);
+    if (localUser) {
+      return localUser; // Already in the correct format
+    }
+
+    // Fetch from API
     const response = await api.get(`/users/${id}`);
-    return response.data;
+    // Normalize the API response to match the local user structure
+    const userData = response.data.data; // Extract the user data
+    return {
+      id: userData.id.toString(), // Ensure id is a string
+      first_name: userData.first_name,
+      last_name: userData.last_name,
+      email: userData.email,
+      avatar: userData.avatar,
+      role: userData.role || "General Back Office", // Add default role if missing
+      status: userData.status || "Active", // Add default status if missing
+      created_at: userData.created_at || new Date().toISOString(), // Add default created_at if missing
+    };
   } catch (error) {
     throw new Error("Failed to fetch user details.");
   }
