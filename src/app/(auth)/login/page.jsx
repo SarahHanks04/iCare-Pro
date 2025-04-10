@@ -22,30 +22,26 @@ export default function Login() {
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const response = await loginUser(values.email, values.password);
+      console.log("Login Response:", response);
 
-      // Get user data from localStorage
-      const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
-      console.log("Mocked Users in Login:", mockedUsers);
+      const isMockToken = response.token.startsWith("mock-token-");
 
-      const matchingUsers = mockedUsers.filter(
-        (u) => u.email.toLowerCase() === values.email.toLowerCase()
-      );
-
-      if (matchingUsers.length === 0) {
-        throw new Error("User not found in local storage after login.");
+      let userName = "User";
+      if (isMockToken) {
+        const mockedUsers =
+          JSON.parse(localStorage.getItem("mockedUsers")) || [];
+        const user = mockedUsers.find(
+          (u) => u.email.toLowerCase() === values.email.toLowerCase()
+        );
+        if (user) {
+          userName = user.name || "User";
+        }
       }
-
-      const user =
-        matchingUsers.find((u) => u.name) ||
-        matchingUsers[matchingUsers.length - 1];
-
-      console.log("Selected User:", user);
-      console.log("Name to dispatch:", user.name || "User");
 
       dispatch(
         loginSuccess({
           email: values.email,
-          name: user.name || "User",
+          name: userName,
           token: response.token,
         })
       );

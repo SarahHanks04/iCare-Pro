@@ -87,7 +87,6 @@ export const registerUser = async (email, password) => {
   }
 };
 
-// Rest of the file remains unchanged
 export const getUsers = async () => {
   try {
     const response = await api.get("/users");

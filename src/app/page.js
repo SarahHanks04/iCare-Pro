@@ -13,7 +13,6 @@ export default function Home() {
       <div className="bg-gray-200 min-h-screen">
         <UserTable />
       </div>
-      {/* <AuthenticatedLayout /> */}
     </div>
   );
 }
