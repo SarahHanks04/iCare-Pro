@@ -35,7 +35,6 @@ export default function Register() {
     try {
       const response = await registerUser(values.email, values.password);
 
-      // Store user data in localStorage, avoiding duplicates
       const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
       const existingUserIndex = mockedUsers.findIndex(
         (u) => u.email.toLowerCase() === values.email.toLowerCase()
@@ -49,15 +48,13 @@ export default function Register() {
       };
 
       if (existingUserIndex !== -1) {
-        // Update existing user
         mockedUsers[existingUserIndex] = newUser;
       } else {
-        // Add new user
         mockedUsers.push(newUser);
       }
 
       localStorage.setItem("mockedUsers", JSON.stringify(mockedUsers));
-      console.log("Updated Mocked Users:", mockedUsers); // Debug log
+      console.log("Updated Mocked Users:", mockedUsers);
 
       setSuccess("Account created successfully! Redirecting to login...");
       setTimeout(() => router.push("/login"), 2000);
@@ -68,7 +65,6 @@ export default function Register() {
     }
   };
 
-  // Rest of the component (JSX) remains unchanged
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">

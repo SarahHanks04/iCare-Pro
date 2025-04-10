@@ -19,38 +19,14 @@ export default function Login() {
     password: Yup.string().required("Required"),
   });
 
-  // const handleSubmit = async (values, { setSubmitting }) => {
-  //   try {
-  //     const response = await loginUser(values.email, values.password);
-
-  //     // Get user data from localStorage
-  //     const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
-  //     const user = mockedUsers.find((u) => u.email === values.email);
-
-  //     dispatch(
-  //       loginSuccess({
-  //         email: values.email,
-  //         name: user?.name || "User", // Use stored name or default
-  //         token: response.token,
-  //       })
-  //     );
-  //     router.push("/");
-  //   } catch (err) {
-  //     setError(err.message);
-  //   } finally {
-  //     setSubmitting(false);
-  //   }
-  // };
-
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const response = await loginUser(values.email, values.password);
 
       // Get user data from localStorage
       const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
-      console.log("Mocked Users in Login:", mockedUsers); // Debug log
+      console.log("Mocked Users in Login:", mockedUsers);
 
-      // Find all users with matching email (case-insensitive)
       const matchingUsers = mockedUsers.filter(
         (u) => u.email.toLowerCase() === values.email.toLowerCase()
       );
@@ -59,12 +35,11 @@ export default function Login() {
         throw new Error("User not found in local storage after login.");
       }
 
-      // Prefer the user with a name, or take the last one if no name is found
       const user =
         matchingUsers.find((u) => u.name) ||
         matchingUsers[matchingUsers.length - 1];
 
-      console.log("Selected User:", user); // Debug log
+      console.log("Selected User:", user);
       console.log("Name to dispatch:", user.name || "User");
 
       dispatch(
