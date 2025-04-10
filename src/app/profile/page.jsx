@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Edit2Icon, LogOut } from "lucide-react";
+import { Edit2Icon, Power } from "lucide-react";
 import { loginSuccess, logout } from "../redux/slices/authSlice";
 import Loading from "../loading";
 
@@ -45,7 +45,7 @@ export default function Profile() {
     setIsLoading(false);
   }, [dispatch, router]);
 
-  // Sync formData and avatar with Redux user, but only if authenticated
+  // Sync formData and avatar with Redux user
   useEffect(() => {
     if (isAuthenticated && user.email) {
       setFormData({
@@ -138,17 +138,21 @@ export default function Profile() {
               onClick={handleLogout}
               className="absolute top-4 right-4 flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
             >
-              <LogOut className="h-4 w-4" />
-              <span>Logout</span>
+              <Power className="h-4 w-4" />
+              {/* <span>Logout</span> */}
             </button>
+
             <div className="relative mx-auto w-32 h-32">
-              <Image
-                src={avatar}
-                alt="Profile Avatar"
-                width={128}
-                height={128}
-                className="rounded-full object-cover border-4 border-white shadow-lg"
-              />
+              <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-lg">
+                <Image
+                  src={avatar}
+                  alt="Profile Avatar"
+                  fill
+                  className="object-cover"
+                  style={{ objectPosition: "center" }}
+                  priority
+                />
+              </div>
               <label
                 htmlFor="avatar-upload"
                 className="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-md cursor-pointer hover:bg-gray-100 transition-colors"
