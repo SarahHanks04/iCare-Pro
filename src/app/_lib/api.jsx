@@ -89,9 +89,22 @@ export const registerUser = async (email, password) => {
 
 export const getUsers = async () => {
   try {
-    const response = await api.get("/users");
-    return response.data;
+    const page1Response = await api.get("/users?page=1");
+    const page1Data = page1Response.data.data;
+
+    const page2Response = await api.get("/users?page=2");
+    const page2Data = page2Response.data.data;
+
+    const reqresUsers = [...page1Data, ...page2Data];
+
+    const localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
+
+    const allUsers = [...localUsers, ...reqresUsers];
+    console.log("Fetched all users (Reqres + Local):", allUsers);
+
+    return allUsers;
   } catch (error) {
+    console.error("Get users error:", error.response?.data || error.message);
     throw new Error("Failed to fetch users.");
   }
 };
@@ -126,6 +139,41 @@ export const createUser = async (userData) => {
     return response.data;
   } catch (error) {
     throw new Error("Failed to create user.");
+  }
+};
+
+export const updateUser = async (id, userData) => {
+  try {
+    const response = await api.put(`/users/${id}`, userData);
+    console.log("User updated:", response.data);
+
+    const localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
+    const userIndex = localUsers.findIndex((user) => user.id === id);
+    if (userIndex !== -1) {
+      localUsers[userIndex] = { ...localUsers[userIndex], ...userData };
+      localStorage.setItem("localUsers", JSON.stringify(localUsers));
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error("Update error:", error.response?.data || error.message);
+    throw new Error("Failed to update user.");
+  }
+};
+
+export const deleteUser = async (id) => {
+  try {
+    const response = await api.delete(`/users/${id}`);
+    console.log("User deleted:", id);
+
+    const localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
+    const updatedLocalUsers = localUsers.filter((user) => user.id !== id);
+    localStorage.setItem("localUsers", JSON.stringify(updatedLocalUsers));
+
+    return response.status === 204;
+  } catch (error) {
+    console.error("Delete error:", error.response?.data || error.message);
+    throw new Error("Failed to delete user.");
   }
 };
 

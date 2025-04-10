@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { jsPDF } from "jspdf";
+import { updateUser, deleteUser } from "../_lib/api";
 
 export default function EllipsisDropdown({
   user,
@@ -50,12 +51,12 @@ export default function EllipsisDropdown({
     );
     doc.save(`${user.first_name}_${user.last_name}_details.pdf`);
     toast.success(`Exported ${user.first_name} ${user.last_name}'s details.`, {
-      duration: 7000,
+      duration: 3000,
     });
     setIsOpen(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     toast.custom(
       (t) => (
         <div
@@ -82,64 +83,38 @@ export default function EllipsisDropdown({
               </p>
               <div className="mt-4 flex space-x-3">
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     toast.dismiss(t.id);
-                    const deletedUser = { ...user };
-                    const updatedUsers = users.filter((u) => u.id !== user.id);
-                    setUsers(updatedUsers);
-                    setFilteredUsers(updatedUsers);
+                    try {
+                      await deleteUser(user.id);
+                      const updatedUsers = users.filter(
+                        (u) => u.id !== user.id
+                      );
+                      setUsers(updatedUsers);
+                      setFilteredUsers(updatedUsers);
 
-                    const localUsers =
-                      JSON.parse(localStorage.getItem("localUsers")) || [];
-                    const updatedLocalUsers = localUsers.filter(
-                      (u) => u.id !== user.id
-                    );
-                    localStorage.setItem(
-                      "localUsers",
-                      JSON.stringify(updatedLocalUsers)
-                    );
-
-                    toast.success(
-                      `User ${user.first_name} ${user.last_name} has been deleted.`,
-                      {
-                        duration: 2000,
-                        icon: <Trash2 className="h-5 w-5 text-red-600" />,
-                        position: "top-right",
-                        style: {
-                          background: "#fef2f2",
-                          color: "#b91c1c",
-                          border: "1px solid #fecaca",
-                        },
-                        ariaProps: {
-                          role: "alert",
-                          "aria-live": "polite",
-                        },
-                        action: {
-                          text: "Undo",
-                          onClick: () => {
-                            const restoredUsers = [
-                              deletedUser,
-                              ...updatedUsers,
-                            ];
-                            setUsers(restoredUsers);
-                            setFilteredUsers(restoredUsers);
-
-                            const restoredLocalUsers = [
-                              deletedUser,
-                              ...updatedLocalUsers,
-                            ];
-                            localStorage.setItem(
-                              "localUsers",
-                              JSON.stringify(restoredLocalUsers)
-                            );
-                            toast.success("User restored successfully!", {
-                              duration: 3000,
-                              icon: "↩️",
-                            });
+                      toast.success(
+                        `User ${user.first_name} ${user.last_name} has been deleted.`,
+                        {
+                          duration: 1000,
+                          icon: <Trash2 className="h-5 w-5 text-red-600" />,
+                          position: "top-right",
+                          style: {
+                            background: "#fef2f2",
+                            color: "#b91c1c",
+                            border: "1px solid #fecaca",
                           },
-                        },
-                      }
-                    );
+                          ariaProps: {
+                            role: "alert",
+                            "aria-live": "polite",
+                          },
+                        }
+                      );
+                    } catch (error) {
+                      toast.error(`Failed to delete user: ${error.message}`, {
+                        duration: 2000,
+                      });
+                    }
                   }}
                   className="px-3 py-1 bg-red-600 text-white text-xs cursor-pointer font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-0"
                 >
@@ -157,7 +132,7 @@ export default function EllipsisDropdown({
         </div>
       ),
       {
-        duration: 7000,
+        duration: 4000,
         position: "top-center",
         ariaProps: {
           role: "alert",

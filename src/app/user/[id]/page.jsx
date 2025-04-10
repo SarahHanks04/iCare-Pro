@@ -4,7 +4,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { use, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Mail, Briefcase, CheckCircle2, CalendarDays } from "lucide-react";
+import {
+  ArrowLeft,
+  Mail,
+  Briefcase,
+  CheckCircle2,
+  CalendarDays,
+} from "lucide-react";
 import {
   setError,
   setLoading,
@@ -31,11 +37,14 @@ export default function UserPage({ params }) {
     fetchUser();
   }, [id, dispatch]);
 
-  if (loading) return <div className="text-center py-20 text-[#11453B]">Loading...</div>;
+  if (loading)
+    return <div className="text-center py-20 text-[#11453B]">Loading...</div>;
   if (error)
     return <div className="text-red-500 text-center py-20">Error: {error}</div>;
   if (!selectedUser)
-    return <div className="text-center py-20 text-[#11453B]">User not found</div>;
+    return (
+      <div className="text-center py-20 text-[#11453B]">User not found</div>
+    );
 
   return (
     <div className="p-6 bg-[#F0F7EB] min-h-screen">
@@ -49,13 +58,13 @@ export default function UserPage({ params }) {
         </Link>
 
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          {/* Header with accent color */}
+          {/* Header */}
           <div className="bg-[#11453B] p-4 text-white">
-            <h1 className="text-2xl font-bold text-center">Personal Information</h1>
+            <h1 className="text-2xl font-bold text-center">User Information</h1>
           </div>
 
           <div className="p-8">
-            {/* Profile picture with decorative elements */}
+            {/* Profile picture */}
             <div className="flex justify-center mb-8">
               <div className="relative">
                 <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#F0F7EB] shadow-md">
@@ -80,7 +89,7 @@ export default function UserPage({ params }) {
               </h2>
             </div>
 
-            {/* User details in a clean layout */}
+            {/* User details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-[#F0F7EB80] p-4 rounded-lg">
                 <div className="flex items-center mb-3">
@@ -108,11 +117,13 @@ export default function UserPage({ params }) {
                   <span className="font-medium text-[#11453B]">Status</span>
                 </div>
                 <p className="text-gray-700 pl-7">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    selectedUser.status === "Active"
-                      ? "bg-yellow-100 text-yellow-800"
-                      : "bg-red-100 text-red-800"
-                  }`}>
+                  <span
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      selectedUser.status === "Active"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
                     {selectedUser.status || "Active"}
                   </span>
                 </p>
@@ -125,11 +136,14 @@ export default function UserPage({ params }) {
                 </div>
                 <p className="text-gray-700 pl-7">
                   {selectedUser.created_at
-                    ? new Date(selectedUser.created_at).toLocaleDateString("en-US", {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })
+                    ? new Date(selectedUser.created_at).toLocaleDateString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )
                     : "April 8, 2025"}
                 </p>
               </div>
