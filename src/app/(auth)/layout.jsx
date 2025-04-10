@@ -17,7 +17,7 @@ export default function AuthenticatedLayout({ children }) {
     <>
       {shouldShowSidebar ? (
         <div className="flex flex-col min-h-screen">
-          <Navbar />
+          {/* <Navbar /> */}
           <div className="flex flex-1/2">
             <Sidebar />
             <MainContent>{children}</MainContent>

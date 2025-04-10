@@ -1,264 +1,178 @@
-// "use client";
-
-// import { useState } from "react";
-
-// import { useRouter } from "next/navigation";
-// import Link from "next/link";
-// import { registerUser } from "@/app/_lib/api";
-
-// export default function Register() {
-//   const [name, setName] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [confirmPassword, setConfirmPassword] = useState("");
-//   const [showPassword, setShowPassword] = useState(false);
-//   const [error, setError] = useState(null);
-//   const [successMessage, setSuccessMessage] = useState(null);
-//   const router = useRouter();
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     if (password !== confirmPassword) {
-//       setError("Passwords do not match.");
-//       return;
-//     }
-
-//     try {
-//       await registerUser(email, password);
-//       setSuccessMessage(
-//         "Account created successfully! Please use the details to log in now."
-//       );
-//       setError(null);
-//       setTimeout(() => {
-//         router.push("/login");
-//       }, 3000);
-//     } catch (err) {
-//       setError(err.message);
-//       setSuccessMessage(null);
-//     }
-//   };
-
-//   return (
-//     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-//       <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-//         <h2 className="text-2xl font-bold mb-4 text-center">
-//           Create an Account
-//         </h2>
-//         {error && <p className="text-red-500 mb-4">{error}</p>}
-//         {successMessage && (
-//           <p className="text-green-500 mb-4">{successMessage}</p>
-//         )}
-//         <form onSubmit={handleSubmit}>
-//           <div className="mb-4">
-//             <label className="block text-gray-700">Name</label>
-//             <input
-//               type="text"
-//               value={name}
-//               onChange={(e) => setName(e.target.value)}
-//               className="w-full p-2 border rounded cursor-pointer"
-//               required
-//             />
-//           </div>
-//           <div className="mb-4">
-//             <label className="block text-gray-700">Email</label>
-//             <input
-//               type="email"
-//               value={email}
-//               onChange={(e) => setEmail(e.target.value)}
-//               className="w-full p-2 border rounded cursor-pointer"
-//               required
-//             />
-//           </div>
-//           <div className="mb-4">
-//             <label className="block text-gray-700">Password</label>
-//             <input
-//               type={showPassword ? "text" : "password"}
-//               value={password}
-//               onChange={(e) => setPassword(e.target.value)}
-//               className="w-full p-2 border rounded cursor-pointer"
-//               required
-//             />
-//           </div>
-//           <div className="mb-4">
-//             <label className="block text-gray-700">Confirm Password</label>
-//             <input
-//               type={showPassword ? "text" : "password"}
-//               value={confirmPassword}
-//               onChange={(e) => setConfirmPassword(e.target.value)}
-//               className="w-full p-2 border rounded cursor-pointer"
-//               required
-//             />
-//             <div className="mt-2 flex items-center">
-//               <input
-//                 type="checkbox"
-//                 checked={showPassword}
-//                 onChange={() => setShowPassword(!showPassword)}
-//                 className="mr-2 cursor-pointer"
-//               />
-//               <label className="text-gray-700">Show Password</label>
-//             </div>
-//           </div>
-//           <button
-//             type="submit"
-//             className="w-full bg-[#11453B] text-white p-2 rounded cursor-pointer"
-//           >
-//             Register
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }
-
-// WITH FORMIK
 "use client";
-
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { registerUser } from "@/app/_lib/api";
+import { registerUser } from "../../_lib/api";
+import { useDispatch } from "react-redux";
 
 export default function Register() {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const initialValues = {
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-    showPassword: false,
   };
 
   const validationSchema = Yup.object({
-    name: Yup.string().required("Name is required"),
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
+    name: Yup.string().required("Required"),
+    email: Yup.string().email("Invalid email address").required("Required"),
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
-      .required("Password is required"),
+      .required("Required"),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords must match")
-      .required("Confirm Password is required"),
+      .required("Required"),
   });
 
-  const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      await registerUser(values.email, values.password);
-      setFieldError("general", null);
-      setFieldError(
-        "success",
-        "Account created successfully! Redirecting to login..."
+      const response = await registerUser(values.email, values.password);
+
+      // Store user data in localStorage, avoiding duplicates
+      const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
+      const existingUserIndex = mockedUsers.findIndex(
+        (u) => u.email.toLowerCase() === values.email.toLowerCase()
       );
-      setTimeout(() => {
-        router.push("/login");
-      }, 3000);
+
+      const newUser = {
+        id: response.id,
+        email: values.email,
+        name: values.name,
+        password: values.password,
+      };
+
+      if (existingUserIndex !== -1) {
+        // Update existing user
+        mockedUsers[existingUserIndex] = newUser;
+      } else {
+        // Add new user
+        mockedUsers.push(newUser);
+      }
+
+      localStorage.setItem("mockedUsers", JSON.stringify(mockedUsers));
+      console.log("Updated Mocked Users:", mockedUsers); // Debug log
+
+      setSuccess("Account created successfully! Redirecting to login...");
+      setTimeout(() => router.push("/login"), 2000);
     } catch (err) {
-      setFieldError("general", err.message);
-      setFieldError("success", null);
+      setError(err.message);
+    } finally {
       setSubmitting(false);
     }
   };
 
+  // Rest of the component (JSX) remains unchanged
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4 text-center">
-          Create an Account
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ values, setFieldValue, isSubmitting }) => (
-            <Form>
-              <div className="mb-4">
-                <label className="block text-gray-700">Name</label>
+          {({ isSubmitting }) => (
+            <Form className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium">
+                  Name
+                </label>
                 <Field
                   type="text"
                   name="name"
-                  className="w-full p-2 border rounded cursor-pointer"
+                  className="w-full p-2 border rounded"
+                  placeholder="e.g. Sarah or Sarah Hanks"
                 />
                 <ErrorMessage
                   name="name"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
+                  component="div"
+                  className="text-red-500 text-sm"
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Email</label>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium">
+                  Email
+                </label>
                 <Field
                   type="email"
                   name="email"
-                  className="w-full p-2 border rounded cursor-pointer"
+                  className="w-full p-2 border rounded"
                 />
                 <ErrorMessage
                   name="email"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
+                  component="div"
+                  className="text-red-500 text-sm"
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Password</label>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium">
+                  Password
+                </label>
                 <Field
-                  type={values.showPassword ? "text" : "password"}
+                  type={showPassword ? "text" : "password"}
                   name="password"
-                  className="w-full p-2 border rounded cursor-pointer"
+                  className="w-full p-2 border rounded"
                 />
                 <ErrorMessage
                   name="password"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
+                  component="div"
+                  className="text-red-500 text-sm"
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Confirm Password</label>
+              <div>
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium"
+                >
+                  Confirm Password
+                </label>
                 <Field
-                  type={values.showPassword ? "text" : "password"}
+                  type={showPassword ? "text" : "password"}
                   name="confirmPassword"
-                  className="w-full p-2 border rounded cursor-pointer"
+                  className="w-full p-2 border rounded"
                 />
                 <ErrorMessage
                   name="confirmPassword"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
+                  component="div"
+                  className="text-red-500 text-sm"
                 />
-                <div className="mt-2 flex items-center">
-                  <Field
-                    type="checkbox"
-                    name="showPassword"
-                    checked={values.showPassword}
-                    onChange={() =>
-                      setFieldValue("showPassword", !values.showPassword)
-                    }
-                    className="mr-2 cursor-pointer"
-                  />
-                  <label className="text-gray-700">Show Password</label>
-                </div>
               </div>
-              <ErrorMessage
-                name="general"
-                component="p"
-                className="text-red-500 mb-4"
-              />
-              <ErrorMessage
-                name="success"
-                component="p"
-                className="text-green-500 mb-4"
-              />
+              <div className="mt-2 flex items-center">
+                <input
+                  type="checkbox"
+                  checked={showPassword}
+                  onChange={() => setShowPassword(!showPassword)}
+                  className="mr-2"
+                />
+                <label className="text-sm text-gray-600">Show Password</label>
+              </div>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#11453B] text-white p-2 rounded cursor-pointer disabled:opacity-50"
+                className="w-full bg-[#11453B] text-white p-2 rounded hover:bg-[#0d3b33]"
               >
                 {isSubmitting ? "Registering..." : "Register"}
               </button>
             </Form>
           )}
         </Formik>
+        {error && <div className="mt-4 text-red-500 text-center">{error}</div>}
+        {success && (
+          <div className="mt-4 text-[#11453B] text-center">{success}</div>
+        )}
+        <p className="mt-5 text-center">
+          Already have an account?{" "}
+          <a href="/login" className="text-[#11453B] hover:underline">
+            Login
+          </a>
+        </p>
       </div>
     </div>
   );

@@ -1,215 +1,154 @@
-// "use client";
-
-// import { useState } from "react";
-// import { useDispatch } from "react-redux";
-// import { useRouter } from "next/navigation";
-// import Link from "next/link";
-// import { loginUser } from "@/app/_lib/api";
-// import { loginSuccess } from "@/app/redux/slices/authSlice";
-
-// export default function Login() {
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [error, setError] = useState(null);
-//   const [showPassword, setShowPassword] = useState(false);
-//   const dispatch = useDispatch();
-//   const router = useRouter();
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       console.log("Attempting login with:", { email, password });
-//       const data = await loginUser(email, password);
-//       console.log("Login successful, data:", data);
-//       dispatch(loginSuccess({ user: { email }, token: data.token }));
-//       console.log("Dispatch successful, redirecting to /");
-//         router.push('/');
-//     } catch (err) {
-//       console.error("Login error:", err.message);
-//       setError(err.message);
-//     }
-//   };
-
-//   return (
-//     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-//       <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-//         <h2 className="text-2xl font-bold mb-4 text-center">
-//           Welcome to Door2day Health Care
-//         </h2>
-//         {error && <p className="text-red-500 mb-4">{error}</p>}
-//         <form onSubmit={handleSubmit}>
-//           <div className="mb-4">
-//             <label className="block text-gray-700">Email</label>
-//             <input
-//               type="email"
-//               value={email}
-//               onChange={(e) => setEmail(e.target.value)}
-//               className="w-full p-2 border rounded cursor-pointer"
-//               required
-//             />
-//           </div>
-//           <div className="mb-4">
-//             <label className="block text-gray-700">Password</label>
-//             <input
-//               type={showPassword ? "text" : "password"}
-//               value={password}
-//               onChange={(e) => setPassword(e.target.value)}
-//               className="w-full p-2 border rounded cursor-pointer"
-//               required
-//             />
-//             <div className="mt-2 flex items-center">
-//               <input
-//                 type="checkbox"
-//                 checked={showPassword}
-//                 onChange={() => setShowPassword(!showPassword)}
-//                 className="mr-2 cursor-pointer"
-//               />
-//               <label className="text-gray-700">Show Password</label>
-//             </div>
-//           </div>
-//           <button
-//             type="submit"
-//             className="w-full bg-[#11453B] cursor-pointer text-white p-2 rounded"
-//           >
-//             Login
-//           </button>
-//         </form>
-//         <p className="mt-4 text-center">
-//           Don't have an account?{" "}
-//           <Link
-//             href="/register"
-//             className="text-[#11453B] hover:underline cursor-pointer"
-//           >
-//             Register
-//           </Link>
-//         </p>
-//       </div>
-//     </div>
-//   );
-// }
-
-// WITH FORMIK
 "use client";
-
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { loginUser } from "@/app/_lib/api";
-import { loginSuccess } from "@/app/redux/slices/authSlice";
+import { loginUser } from "../../_lib/api";
+import { loginSuccess } from "../../redux/slices/authSlice";
 
 export default function Login() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const initialValues = {
-    email: "",
-    password: "",
-    showPassword: false,
-  };
-
+  const initialValues = { email: "", password: "" };
   const validationSchema = Yup.object({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string().required("Password is required"),
+    email: Yup.string().email("Invalid email address").required("Required"),
+    password: Yup.string().required("Required"),
   });
 
-  const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
+  // const handleSubmit = async (values, { setSubmitting }) => {
+  //   try {
+  //     const response = await loginUser(values.email, values.password);
+
+  //     // Get user data from localStorage
+  //     const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
+  //     const user = mockedUsers.find((u) => u.email === values.email);
+
+  //     dispatch(
+  //       loginSuccess({
+  //         email: values.email,
+  //         name: user?.name || "User", // Use stored name or default
+  //         token: response.token,
+  //       })
+  //     );
+  //     router.push("/");
+  //   } catch (err) {
+  //     setError(err.message);
+  //   } finally {
+  //     setSubmitting(false);
+  //   }
+  // };
+
+  const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      console.log("Attempting login with:", {
-        email: values.email,
-        password: values.password,
-      });
-      const data = await loginUser(values.email, values.password);
-      console.log("Login successful, data:", data);
-      dispatch(
-        loginSuccess({ user: { email: values.email }, token: data.token })
+      const response = await loginUser(values.email, values.password);
+
+      // Get user data from localStorage
+      const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
+      console.log("Mocked Users in Login:", mockedUsers); // Debug log
+
+      // Find all users with matching email (case-insensitive)
+      const matchingUsers = mockedUsers.filter(
+        (u) => u.email.toLowerCase() === values.email.toLowerCase()
       );
-      console.log("Dispatch successful, redirecting to /");
+
+      if (matchingUsers.length === 0) {
+        throw new Error("User not found in local storage after login.");
+      }
+
+      // Prefer the user with a name, or take the last one if no name is found
+      const user =
+        matchingUsers.find((u) => u.name) ||
+        matchingUsers[matchingUsers.length - 1];
+
+      console.log("Selected User:", user); // Debug log
+      console.log("Name to dispatch:", user.name || "User");
+
+      dispatch(
+        loginSuccess({
+          email: values.email,
+          name: user.name || "User",
+          token: response.token,
+        })
+      );
       router.push("/");
     } catch (err) {
-      console.error("Login error:", err.message);
-      setFieldError("general", err.message);
+      setError(err.message);
+    } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4 text-center">
-          Welcome to Door2day Health Care
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ values, setFieldValue, isSubmitting }) => (
-            <Form>
-              <div className="mb-4">
-                <label className="block text-gray-700">Email</label>
+          {({ isSubmitting }) => (
+            <Form className="space-y-4">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium">
+                  Email
+                </label>
                 <Field
                   type="email"
                   name="email"
-                  className="w-full p-2 border rounded cursor-pointer"
+                  className="w-full p-2 border rounded"
                 />
                 <ErrorMessage
                   name="email"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
+                  component="div"
+                  className="text-red-500 text-sm"
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Password</label>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium">
+                  Password
+                </label>
                 <Field
-                  type={values.showPassword ? "text" : "password"}
+                  type={showPassword ? "text" : "password"}
                   name="password"
-                  className="w-full p-2 border rounded cursor-pointer"
+                  className="w-full p-2 border rounded"
                 />
                 <ErrorMessage
                   name="password"
-                  component="p"
-                  className="text-red-500 text-sm mt-1"
+                  component="div"
+                  className="text-red-500 text-sm"
                 />
                 <div className="mt-2 flex items-center">
-                  <Field
+                  <input
                     type="checkbox"
-                    name="showPassword"
-                    checked={values.showPassword}
-                    onChange={() =>
-                      setFieldValue("showPassword", !values.showPassword)
-                    }
-                    className="mr-2 cursor-pointer"
+                    checked={showPassword}
+                    onChange={() => setShowPassword(!showPassword)}
+                    className="mr-2"
                   />
-                  <label className="text-gray-700">Show Password</label>
+                  <label className="text-sm text-gray-600">Show Password</label>
                 </div>
               </div>
-              <ErrorMessage
-                name="general"
-                component="p"
-                className="text-red-500 mb-4"
-              />
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#11453B] cursor-pointer text-white p-2 rounded disabled:opacity-50"
+                className="w-full bg-[#11453B] text-white p-2 rounded hover:bg-[#0d3b33]"
               >
                 {isSubmitting ? "Logging in..." : "Login"}
               </button>
             </Form>
           )}
         </Formik>
-        <p className="mt-4 text-center">
+        {error && <div className="mt-4 text-red-500 text-center">{error}</div>}
+        <p className="mt-5 text-center">
           Don't have an account?{" "}
-          <Link
-            href="/register"
-            className="text-[#11453B] hover:underline cursor-pointer"
-          >
+          <a href="/register" className="text-[#11453B] hover:underline">
             Register
-          </Link>
+          </a>
         </p>
       </div>
     </div>

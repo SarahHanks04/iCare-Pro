@@ -1,4 +1,144 @@
+// import axios from "axios";
+
+// const api = axios.create({
+//   baseURL: process.env.NEXT_PUBLIC_API_URL,
+// });
+
+// api.interceptors.request.use(
+//   (config) => {
+//     if (typeof window !== "undefined") {
+//       const token = localStorage.getItem("token");
+//       if (token) {
+//         config.headers.Authorization = `Bearer ${token}`;
+//       }
+//     }
+//     return config;
+//   },
+//   (error) => Promise.reject(error)
+// );
+
+// export const loginUser = async (email, password) => {
+//   try {
+//     const response = await api.post("/login", { email, password });
+//     return response.data;
+//   } catch (error) {
+//     console.error("Login error:", error.response?.data || error.message);
+//     // Check localStorage for mocked users
+//     const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
+//     const user = mockedUsers.find(
+//       (u) => u.email === email && u.password === password
+//     );
+//     if (user) {
+//       return { token: `mock-token-${email}` };
+//     }
+//     const errorMessage =
+//       error.response?.data?.error === "user not found"
+//         ? "User not found. Please register first."
+//         : error.response?.data?.error ||
+//           "Login failed. Please check your credentials.";
+//     throw new Error(errorMessage);
+//   }
+// };
+
+// export const registerUser = async (email, password) => {
+//   try {
+//     console.log("Registering with:", { email, password });
+//     const response = await api.post("/register", { email, password });
+//     return response.data;
+//   } catch (error) {
+//     console.error("Registration error:", {
+//       data: error.response?.data,
+//       status: error.response?.status,
+//       message: error.message,
+//     });
+//     // Only defined users succeed registration
+//     if (
+//       error.response &&
+//       error.response.data?.error ===
+//         "Note: Only defined users succeed registration"
+//     ) {
+//       console.log("Mocking successful registration for:", email);
+//       const newUser = {
+//         id: Math.floor(Math.random() * 1000).toString(),
+//         email,
+//         password, // In a real app, you should hash the password
+//       };
+//       // Store the mocked user in localStorage
+//       const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
+//       mockedUsers.push(newUser);
+//       localStorage.setItem("mockedUsers", JSON.stringify(mockedUsers));
+//       return {
+//         id: newUser.id,
+//         token: `mock-token-${email}`,
+//       };
+//     }
+//     // Handle other specific errors
+//     if (error.response && error.response.data?.error === "Missing password") {
+//       throw new Error("Password is required.");
+//     }
+//     if (
+//       error.response &&
+//       error.response.data?.error === "Missing email or username"
+//     ) {
+//       throw new Error("Email is required.");
+//     }
+//     throw new Error(
+//       error.response?.data?.error || "Registration failed. Please try again."
+//     );
+//   }
+// };
+
+// export const getUsers = async () => {
+//   try {
+//     const response = await api.get("/users");
+//     return response.data;
+//   } catch (error) {
+//     throw new Error("Failed to fetch users.");
+//   }
+// };
+
+// export const getUserById = async (id) => {
+//   try {
+//     // Check localStorage first
+//     const localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
+//     const localUser = localUsers.find((user) => user.id === id);
+//     if (localUser) {
+//       return localUser; // Already in the correct format
+//     }
+
+//     // Fetch from API
+//     const response = await api.get(`/users/${id}`);
+//     // Normalize the API response to match the local user structure
+//     const userData = response.data.data; // Extract the user data
+//     return {
+//       id: userData.id.toString(), // Ensure id is a string
+//       first_name: userData.first_name,
+//       last_name: userData.last_name,
+//       email: userData.email,
+//       avatar: userData.avatar,
+//       role: userData.role || "General Back Office", // Add default role if missing
+//       status: userData.status || "Active", // Add default status if missing
+//       created_at: userData.created_at || new Date().toISOString(), // Add default created_at if missing
+//     };
+//   } catch (error) {
+//     throw new Error("Failed to fetch user details.");
+//   }
+// };
+
+// export const createUser = async (userData) => {
+//   try {
+//     const response = await api.post("/users", userData);
+//     return response.data;
+//   } catch (error) {
+//     throw new Error("Failed to create user.");
+//   }
+// };
+
+// export default api;
+
+
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid"; // Import UUID
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -23,13 +163,13 @@ export const loginUser = async (email, password) => {
     return response.data;
   } catch (error) {
     console.error("Login error:", error.response?.data || error.message);
-    // Check localStorage for mocked users
     const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
     const user = mockedUsers.find(
       (u) => u.email === email && u.password === password
     );
     if (user) {
-      return { token: `mock-token-${email}` };
+      const uniqueToken = `mock-token-${uuidv4()}`; // Use UUID for mock token
+      return { token: uniqueToken };
     }
     const errorMessage =
       error.response?.data?.error === "user not found"
@@ -51,7 +191,6 @@ export const registerUser = async (email, password) => {
       status: error.response?.status,
       message: error.message,
     });
-    // Only defined users succeed registration
     if (
       error.response &&
       error.response.data?.error ===
@@ -61,18 +200,17 @@ export const registerUser = async (email, password) => {
       const newUser = {
         id: Math.floor(Math.random() * 1000).toString(),
         email,
-        password, // In a real app, you should hash the password
+        password,
       };
-      // Store the mocked user in localStorage
       const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
       mockedUsers.push(newUser);
       localStorage.setItem("mockedUsers", JSON.stringify(mockedUsers));
+      const uniqueToken = `mock-token-${uuidv4()}`; // Use UUID for mock token
       return {
         id: newUser.id,
-        token: `mock-token-${email}`,
+        token: uniqueToken,
       };
     }
-    // Handle other specific errors
     if (error.response && error.response.data?.error === "Missing password") {
       throw new Error("Password is required.");
     }
@@ -88,6 +226,7 @@ export const registerUser = async (email, password) => {
   }
 };
 
+// Rest of the file remains unchanged
 export const getUsers = async () => {
   try {
     const response = await api.get("/users");
@@ -99,26 +238,22 @@ export const getUsers = async () => {
 
 export const getUserById = async (id) => {
   try {
-    // Check localStorage first
     const localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
     const localUser = localUsers.find((user) => user.id === id);
     if (localUser) {
-      return localUser; // Already in the correct format
+      return localUser;
     }
-
-    // Fetch from API
     const response = await api.get(`/users/${id}`);
-    // Normalize the API response to match the local user structure
-    const userData = response.data.data; // Extract the user data
+    const userData = response.data.data;
     return {
-      id: userData.id.toString(), // Ensure id is a string
+      id: userData.id.toString(),
       first_name: userData.first_name,
       last_name: userData.last_name,
       email: userData.email,
       avatar: userData.avatar,
-      role: userData.role || "General Back Office", // Add default role if missing
-      status: userData.status || "Active", // Add default status if missing
-      created_at: userData.created_at || new Date().toISOString(), // Add default created_at if missing
+      role: userData.role || "General Back Office",
+      status: userData.status || "Active",
+      created_at: userData.created_at || new Date().toISOString(),
     };
   } catch (error) {
     throw new Error("Failed to fetch user details.");
@@ -135,3 +270,139 @@ export const createUser = async (userData) => {
 };
 
 export default api;
+
+
+// WITH BYCRYPT
+// import axios from "axios";
+// import { v4 as uuidv4 } from "uuid";
+// import bcrypt from "bcryptjs"; // Import bcrypt
+
+// const api = axios.create({
+//   baseURL: process.env.NEXT_PUBLIC_API_URL,
+// });
+
+// api.interceptors.request.use(
+//   (config) => {
+//     if (typeof window !== "undefined") {
+//       const token = localStorage.getItem("token");
+//       if (token) {
+//         config.headers.Authorization = `Bearer ${token}`;
+//       }
+//     }
+//     return config;
+//   },
+//   (error) => Promise.reject(error)
+// );
+
+// export const loginUser = async (email, password) => {
+//   try {
+//     const response = await api.post("/login", { email, password });
+//     return response.data;
+//   } catch (error) {
+//     console.error("Login error:", error.response?.data || error.message);
+//     const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
+//     const user = mockedUsers.find((u) => u.email === email);
+//     if (user && (await bcrypt.compare(password, user.password))) {
+//       const uniqueToken = `mock-token-${uuidv4()}`;
+//       return { token: uniqueToken };
+//     }
+//     const errorMessage =
+//       error.response?.data?.error === "user not found"
+//         ? "User not found. Please register first."
+//         : error.response?.data?.error ||
+//           "Login failed. Please check your credentials.";
+//     throw new Error(errorMessage);
+//   }
+// };
+
+// export const registerUser = async (email, password) => {
+//   try {
+//     console.log("Registering with:", { email, password });
+//     const response = await api.post("/register", { email, password });
+//     return response.data;
+//   } catch (error) {
+//     console.error("Registration error:", {
+//       data: error.response?.data,
+//       status: error.response?.status,
+//       message: error.message,
+//     });
+//     if (
+//       error.response &&
+//       error.response.data?.error ===
+//         "Note: Only defined users succeed registration"
+//     ) {
+//       console.log("Mocking successful registration for:", email);
+//       const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+//       const newUser = {
+//         id: Math.floor(Math.random() * 1000).toString(),
+//         email,
+//         password: hashedPassword, // Store the hashed password
+//       };
+//       const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
+//       mockedUsers.push(newUser);
+//       localStorage.setItem("mockedUsers", JSON.stringify(mockedUsers));
+//       const uniqueToken = `mock-token-${uuidv4()}`;
+//       return {
+//         id: newUser.id,
+//         token: uniqueToken,
+//       };
+//     }
+//     if (error.response && error.response.data?.error === "Missing password") {
+//       throw new Error("Password is required.");
+//     }
+//     if (
+//       error.response &&
+//       error.response.data?.error === "Missing email or username"
+//     ) {
+//       throw new Error("Email is required.");
+//     }
+//     throw new Error(
+//       error.response?.data?.error || "Registration failed. Please try again."
+//     );
+//   }
+// };
+
+// // Rest of the file remains unchanged
+// export const getUsers = async () => {
+//   try {
+//     const response = await api.get("/users");
+//     return response.data;
+//   } catch (error) {
+//     throw new Error("Failed to fetch users.");
+//   }
+// };
+
+// export const getUserById = async (id) => {
+//   try {
+//     const localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
+//     const localUser = localUsers.find((user) => user.id === id);
+//     if (localUser) {
+//       return localUser;
+//     }
+//     const response = await api.get(`/users/${id}`);
+//     const userData = response.data.data;
+//     return {
+//       id: userData.id.toString(),
+//       first_name: userData.first_name,
+//       last_name: userData.last_name,
+//       email: userData.email,
+//       avatar: userData.avatar,
+//       role: userData.role || "General Back Office",
+//       status: userData.status || "Active",
+//       created_at: userData.created_at || new Date().toISOString(),
+//     };
+//   } catch (error) {
+//     throw new Error("Failed to fetch user details.");
+//   }
+// };
+
+// export const createUser = async (userData) => {
+//   try {
+//     const response = await api.post("/users", userData);
+//     return response.data;
+//   } catch (error) {
+//     throw new Error("Failed to create user.");
+//   }
+// };
+
+// export default api;
