@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { Plus, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function AddUserModal({ isOpen, onClose, onUserAdded }) {
   const [error, setError] = useState(null);
@@ -83,10 +84,29 @@ export default function AddUserModal({ isOpen, onClose, onUserAdded }) {
       reset();
       setImagePreview(null);
       setImageFile(null);
+
+      toast.success("User added successfully!", {
+        position: "top-right",
+        duration: 4000,
+        style: {
+          background: "#11453B",
+          color: "#fff",
+        },
+      });
+
       onClose();
     } catch (error) {
       console.error("Error adding user:", error.message);
       setError("Failed to add user. Please try again.");
+
+      toast.error("Failed to add user", {
+        position: "top-right",
+        duration: 4000,
+        style: {
+          background: "#ef4444",
+          color: "#fff",
+        },
+      });
     } finally {
       setIsSubmitting(false);
     }
