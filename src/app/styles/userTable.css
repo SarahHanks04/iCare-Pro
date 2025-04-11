@@ -11,9 +11,9 @@ th {
   letter-spacing: 0.05em;
 }
 
-.btn-group {
+/* .btn-group {
   display: flex;
-  gap: 0.75rem;
+  justify-content: space-between;
 }
 
 .btn {
@@ -30,4 +30,44 @@ th {
 .admin-btn {
   background-color: #dbeafe;
   color: #2563eb;
+} */
+.btn-group-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.admin-btn {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+@media (min-width: 768px) {
+  .btn-group-container {
+    flex-direction: row;
+    align-items: center;
+  }
 }
