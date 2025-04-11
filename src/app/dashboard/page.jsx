@@ -61,20 +61,6 @@ export default function Dashboard() {
   // Recent users
   const recentUsers = users.slice(0, 3);
 
-  // Upcoming events
-  const upcomingEvents = [
-    {
-      date: "26 Fri",
-      name: "Basketball Skills Workshop",
-      location: "Indoor Basketball Court",
-    },
-    {
-      date: "28 Sun",
-      name: "Soccer Tournament",
-      location: "Main Soccer Field",
-    },
-  ];
-
   // Greetings
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -106,9 +92,22 @@ export default function Dashboard() {
     <div className="bg-gray-100 min-h-screen p-6">
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center justify-between w-full">
+        {/* <div className="flex items-center justify-between w-full">
           <h1 className="text-2xl font-bold">{welcomeMessage}</h1>
           <p className="text-sm text-gray-500">
+            {lastSeen
+              ? `Last Seen: ${lastSeen.toLocaleString("en-US", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}`
+              : "First Visit"}
+          </p>
+        </div> */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-2 sm:gap-4">
+          <h1 className="text-xl sm:text-2xl font-bold text-center sm:text-left">
+            {welcomeMessage}
+          </h1>
+          <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-right">
             {lastSeen
               ? `Last Seen: ${lastSeen.toLocaleString("en-US", {
                   dateStyle: "medium",
@@ -127,10 +126,7 @@ export default function Dashboard() {
 
       <ChartsAndTables roleData={roleData} users={users} />
 
-      <RecentActivity
-        recentUsers={recentUsers}
-        upcomingEvents={upcomingEvents}
-      />
+      <RecentActivity recentUsers={recentUsers} />
     </div>
   );
 }

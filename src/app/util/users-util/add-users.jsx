@@ -110,7 +110,10 @@ export default function AddUserModal({ isOpen, onClose, onUserAdded }) {
                 <img
                   src={imagePreview}
                   alt="Preview"
-                  className="w-full h-full object-cover"
+                  
+                  width={96} 
+                  height={96} 
+                  className="w-full h-full object-cover rounded-full"
                 />
               ) : (
                 <div className="flex flex-col items-center">
