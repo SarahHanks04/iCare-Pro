@@ -7,41 +7,31 @@ import Link from "next/link";
 export default function RecentActivity({ recentUsers }) {
   const [userActions, setUserActions] = useState([]);
 
-//   Function to fetch user actions from localStorage
-    const fetchUserActions = () => {
-      const actions = JSON.parse(localStorage.getItem("userActions")) || [];
-      setUserActions(actions.slice(0, 5)); // Show only the 5 most recent actions
+  const fetchUserActions = () => {
+    const actions = JSON.parse(localStorage.getItem("userActions")) || [];
+    setUserActions(actions.slice(0, 5));
+  };
+
+  useEffect(() => {
+    fetchUserActions();
+    const handleStorageChange = (event) => {
+      if (event.key === "userActions") {
+        fetchUserActions();
+      }
     };
 
-    // Fetch actions on mount and listen for storage changes
-    useEffect(() => {
-      // Initial fetch
+    window.addEventListener("storage", handleStorageChange);
+    const handleCustomStorageUpdate = () => {
       fetchUserActions();
+    };
 
-      // Listen for storage events (triggered when localStorage changes)
-      const handleStorageChange = (event) => {
-        if (event.key === "userActions") {
-          fetchUserActions();
-        }
-      };
+    window.addEventListener("userActionLogged", handleCustomStorageUpdate);
 
-      window.addEventListener("storage", handleStorageChange);
-
-      // Custom event to handle same-tab updates (since 'storage' event only works across tabs)
-      const handleCustomStorageUpdate = () => {
-        fetchUserActions();
-      };
-
-      window.addEventListener("userActionLogged", handleCustomStorageUpdate);
-
-      // Cleanup event listeners on unmount
-      return () => {
-        window.removeEventListener("storage", handleStorageChange);
-        window.removeEventListener("userActionLogged", handleCustomStorageUpdate);
-      };
-    }, []);
-
-  
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("userActionLogged", handleCustomStorageUpdate);
+    };
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },

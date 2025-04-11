@@ -55,7 +55,6 @@ export default function UserTable() {
     localStorage.setItem("localUsers", JSON.stringify(localUsers));
   };
 
-  
   // const handleUserAdded = (newUser) => {
   //   const updatedUsers = [newUser, ...users];
   //   dispatch(setUsers(updatedUsers));
@@ -65,7 +64,7 @@ export default function UserTable() {
   //   localUsers.unshift(newUser);
   //   localStorage.setItem("localUsers", JSON.stringify(localUsers));
 
-  //   
+  //
   //   logUserAction("added", newUser);
   // };
 
@@ -118,7 +117,6 @@ export default function UserTable() {
     }
   };
 
-  // Inside the onEditSave function
   // const onEditSave = async (data, userId) => {
   //   try {
   //     const updatedUserData = {
@@ -142,7 +140,6 @@ export default function UserTable() {
   //     );
   //     localStorage.setItem("localUsers", JSON.stringify(updatedLocalUsers));
 
-  //     // Log the action
   //     logUserAction("updated", response, {
   //       updatedFields: Object.keys(updatedUserData),
   //     });
@@ -174,18 +171,12 @@ export default function UserTable() {
   const endIndex = startIndex + itemsPerPage;
   const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
 
-  const welcomeMessage = loggedInUser
-    ? `Welcome ${loggedInUser.name}`
-    : "Welcome User";
-
   if (loading) return <Loading />;
   if (error)
     return <div className="text-red-500 text-center py-8">Error: {error}</div>;
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">{welcomeMessage},</h2>
-
       <div className="btn-group-container">
         <div className="btn-group">
           <button className="btn admin-btn">ADMINISTRATION</button>
@@ -406,6 +397,3 @@ export default function UserTable() {
     </div>
   );
 }
-
-
-

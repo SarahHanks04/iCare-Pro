@@ -20,7 +20,6 @@ export default async function middleware(req) {
   const cookieStore = await cookies();
   const cookie = cookieStore.get("authToken")?.value;
 
-  // Log for debugging
   console.log("Middleware - Path:", path);
   console.log("Middleware - Is Protected Route:", isProtectedRoute);
   console.log("Middleware - Is Public Route:", isPublicRoute);

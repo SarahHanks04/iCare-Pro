@@ -110,7 +110,6 @@ export default function AddUserModal({ isOpen, onClose, onUserAdded }) {
                 <img
                   src={imagePreview}
                   alt="Preview"
-                  
                   width={96} 
                   height={96} 
                   className="w-full h-full object-cover rounded-full"
