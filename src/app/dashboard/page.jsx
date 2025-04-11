@@ -93,7 +93,7 @@ export default function Dashboard() {
     if (lastSeenTime) {
       setLastSeen(new Date(lastSeenTime));
     }
-    // Update last seen
+
     const now = new Date();
     localStorage.setItem("lastSeen", now.toISOString());
   }, []);
@@ -105,8 +105,8 @@ export default function Dashboard() {
   return (
     <div className="bg-gray-100 min-h-screen p-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center justify-between space-x-4">
+      <div className="mb-6">
+        <div className="flex items-center justify-between w-full">
           <h1 className="text-2xl font-bold">{welcomeMessage}</h1>
           <p className="text-sm text-gray-500">
             {lastSeen
@@ -125,7 +125,7 @@ export default function Dashboard() {
         activeUsers={activeUsers}
       />
 
-      <ChartsAndTables roleData={roleData} />
+      <ChartsAndTables roleData={roleData} users={users} />
 
       <RecentActivity
         recentUsers={recentUsers}
