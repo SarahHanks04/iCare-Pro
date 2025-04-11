@@ -17,6 +17,7 @@ import {
   setSelectedUser,
 } from "@/app/redux/slices/userSlice";
 import { getUserById } from "@/app/_lib/api";
+import Loading from "@/app/loading";
 
 export default function UserPage({ params }) {
   const { id } = use(params);
@@ -38,7 +39,7 @@ export default function UserPage({ params }) {
   }, [id, dispatch]);
 
   if (loading)
-    return <div className="text-center py-20 text-[#11453B]">Loading...</div>;
+    return <div className="text-center py-20 text-[#11453B]"><Loading /></div>;
   if (error)
     return <div className="text-red-500 text-center py-20">Error: {error}</div>;
   if (!selectedUser)

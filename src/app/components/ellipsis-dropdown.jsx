@@ -84,7 +84,7 @@ export default function EllipsisDropdown({
               <div className="mt-4 flex space-x-3">
                 <button
                   onClick={async () => {
-                    toast.dismiss(t.id);
+                    toast.dismiss();
                     try {
                       await deleteUser(user.id);
                       const updatedUsers = users.filter(
@@ -94,9 +94,9 @@ export default function EllipsisDropdown({
                       setFilteredUsers(updatedUsers);
 
                       toast.success(
-                        `User ${user.first_name} ${user.last_name} has been deleted.`,
+                        `${user.first_name} ${user.last_name} has been deleted.`,
                         {
-                          duration: 1000,
+                          duration: 2000,
                           icon: <Trash2 className="h-5 w-5 text-red-600" />,
                           position: "top-right",
                           style: {
@@ -143,7 +143,6 @@ export default function EllipsisDropdown({
     setIsOpen(false);
   };
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -156,19 +155,15 @@ export default function EllipsisDropdown({
 
   return (
     <div className="relative dropdown-container" ref={dropdownRef}>
-      {/* Ellipsis Button */}
       <button
         onClick={toggleDropdown}
         className="text-gray-400 hover:text-gray-600 cursor-pointer focus:outline-none"
       >
         <EllipsisVertical size={20} />
       </button>
-
-      {/* Dropdown Menu */}
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
           <div className="py-1">
-            {/* View Profile */}
             <Link href={`/user/${user.id}`}>
               <button
                 className="flex items-center w-full px-4 py-2 cursor-pointer text-sm text-gray-700 hover:bg-gray-100"
@@ -178,8 +173,6 @@ export default function EllipsisDropdown({
                 View profile
               </button>
             </Link>
-
-            {/* Edit Details */}
             <button
               onClick={handleEdit}
               className="flex items-center w-full px-4 py-2 cursor-pointer text-sm text-gray-700 hover:bg-gray-100"
@@ -187,8 +180,6 @@ export default function EllipsisDropdown({
               <Pencil className="h-4 w-4 mr-2" />
               Edit details
             </button>
-
-            {/* Export Details */}
             <button
               onClick={handleExport}
               className="flex items-center w-full px-4 py-2 cursor-pointer text-sm text-gray-700 hover:bg-gray-100"
@@ -196,8 +187,6 @@ export default function EllipsisDropdown({
               <CloudDownload className="h-4 w-4 mr-2" />
               Export details
             </button>
-
-            {/* Delete User */}
             <button
               onClick={handleDelete}
               className="flex items-center w-full px-4 py-2 cursor-pointer border-t border-gray-200 text-sm text-red-600 hover:bg-red-50"

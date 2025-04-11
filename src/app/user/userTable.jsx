@@ -12,6 +12,7 @@ import EllipsisDropdown from "../components/ellipsis-dropdown";
 import Loading from "../loading";
 import toast from "react-hot-toast";
 import SearchComponent from "../util/search";
+import Pagination from "../util/pagination";
 
 export default function UserTable() {
   const dispatch = useDispatch();
@@ -19,6 +20,8 @@ export default function UserTable() {
   const { user: loggedInUser } = useSelector((state) => state.auth);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [editingUserId, setEditingUserId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   const {
     register,
@@ -105,6 +108,16 @@ export default function UserTable() {
     reset();
   };
 
+  // Pagination logic
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  // Paginated users
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+
   const welcomeMessage = loggedInUser
     ? `Welcome ${loggedInUser.name}`
     : "Welcome User";
@@ -147,7 +160,7 @@ export default function UserTable() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredUsers.map((user) => (
+            {paginatedUsers.map((user) => (
               <tr
                 key={user.id}
                 className={`${
@@ -328,6 +341,11 @@ export default function UserTable() {
             ))}
           </tbody>
         </table>
+        <Pagination
+          totalItems={filteredUsers.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );
