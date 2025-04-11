@@ -84,7 +84,7 @@ export default function Register() {
                   type="text"
                   name="name"
                   className="w-full p-2 border rounded"
-                  placeholder="e.g. Sarah or Sarah Hanks"
+                  placeholder="Enter your name... focus:outline-none"
                 />
                 <ErrorMessage
                   name="name"
@@ -99,7 +99,7 @@ export default function Register() {
                 <Field
                   type="email"
                   name="email"
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded focus:outline-none"
                 />
                 <ErrorMessage
                   name="email"
@@ -114,7 +114,7 @@ export default function Register() {
                 <Field
                   type={showPassword ? "text" : "password"}
                   name="password"
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded focus:outline-none"
                 />
                 <ErrorMessage
                   name="password"
@@ -132,7 +132,7 @@ export default function Register() {
                 <Field
                   type={showPassword ? "text" : "password"}
                   name="confirmPassword"
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded focus:outline-none"
                 />
                 <ErrorMessage
                   name="confirmPassword"

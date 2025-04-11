@@ -45,7 +45,7 @@ export default function Profile() {
     setIsLoading(false);
   }, [dispatch, router]);
 
-  // Sync formData and avatar with Redux user
+  // formData with Redux user
   useEffect(() => {
     if (isAuthenticated && user.email) {
       setFormData({
@@ -60,7 +60,7 @@ export default function Profile() {
     }
   }, [user, isAuthenticated]);
 
-  // Go to login after logout
+  // Logout
   useEffect(() => {
     if (!isAuthenticated && !isLoading) {
       router.push("/login");
@@ -130,7 +130,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-blue-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="bg-gradient-to-r from-teal-600 to-blue-600 p-8 text-center relative">
@@ -139,7 +139,7 @@ export default function Profile() {
               className="absolute top-4 right-4 flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
             >
               <Power className="h-4 w-4" />
-              {/* <span>Logout</span> */}
+              
             </button>
 
             <div className="relative mx-auto w-32 h-32">
@@ -242,7 +242,7 @@ export default function Profile() {
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition"
-                      placeholder="+1 (123) 456-7890"
+                      placeholder="+234 123 456 7890"
                     />
                   ) : (
                     <p className="px-4 py-2 text-gray-800 rounded-lg bg-gray-50">

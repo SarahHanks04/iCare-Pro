@@ -8,7 +8,7 @@ export default function MainContent({ children }) {
     <main
       className={`flex-1 w-full transition-all duration-300 ${
         isCollapsed ? "md:pl-14" : "md:pl-56"
-      } pt-18 md:pt-0`}
+      } pt-16 md:pt-0`}
     >
       {children}
     </main>

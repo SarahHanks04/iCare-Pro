@@ -72,7 +72,7 @@ export default function Login() {
                 <Field
                   type="email"
                   name="email"
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded focus:outline-none"
                 />
                 <ErrorMessage
                   name="email"
@@ -87,7 +87,7 @@ export default function Login() {
                 <Field
                   type={showPassword ? "text" : "password"}
                   name="password"
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded focus:outline-none"
                 />
                 <ErrorMessage
                   name="password"

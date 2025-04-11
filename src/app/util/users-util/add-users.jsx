@@ -110,7 +110,7 @@ export default function AddUserModal({ isOpen, onClose, onUserAdded }) {
         {error && <p className="text-red-500 mb-4">{error}</p>}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Improved Image Upload */}
+          {/* Image Upload */}
           <div className="flex flex-col items-center mb-4">
             <div
               onClick={handleAvatarClick}
