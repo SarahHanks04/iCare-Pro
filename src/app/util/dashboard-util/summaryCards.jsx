@@ -31,7 +31,7 @@ export default function SummaryCards({ totalUsers, newUsers, activeUsers }) {
         className="bg-white p-6 rounded-xl shadow-lg border-l-3 border-[#4BC0C0] hover:shadow-md transition-all duration-300"
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-medium text-gray-500">Total Users</h3>
+          <h3 className="text-[16px] font-semibold text-gray-500">Total Users</h3>
           <div className="w-8 h-8 rounded-full bg-[#F0F7EB80] flex items-center justify-center">
             <span className="text-[#11453B] text-sm font-bold">
               <UserRoundCheck size={15} />
@@ -63,7 +63,7 @@ export default function SummaryCards({ totalUsers, newUsers, activeUsers }) {
         className="bg-white p-6 rounded-xl shadow-lg border-l-3 border-[#FF6384] hover:shadow-md transition-all duration-300"
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-medium text-gray-500">
+          <h3 className="text-[16px] font-semibold text-gray-500">
             New Users (2 Days ago)
           </h3>
           <div className="w-8 h-8 rounded-full bg-[#F0F7EB80] flex items-center justify-center">
@@ -99,7 +99,7 @@ export default function SummaryCards({ totalUsers, newUsers, activeUsers }) {
         className="bg-white p-6 rounded-xl shadow-lg border-l-3 border-[#36A2EB] hover:shadow-md transition-all duration-300"
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-medium text-gray-500">Active Users</h3>
+          <h3 className="text-[16px] font-semibold text-gray-500">Active Users</h3>
           <div className="w-8 h-8 rounded-full bg-[#F0F7EB80] flex items-center justify-center">
             <span className="text-[#11453B] text-sm font-bold">
               <CircleCheck size={15} />

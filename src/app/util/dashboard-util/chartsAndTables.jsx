@@ -169,7 +169,7 @@ export default function ChartsAndTables({ roleData, users }) {
         variants={cardVariants}
         className="bg-white p-6 rounded-xl shadow-lg border border-[#11453B]/10 hover:shadow-md transition-all duration-300"
       >
-        <h3 className="text-2xl font-semibold text-[#11453B]">
+        <h3 className="text-xl font-semibold text-[#11453B]">
           Role Distribution
         </h3>
         <div className="w-full h-64">
@@ -198,7 +198,7 @@ export default function ChartsAndTables({ roleData, users }) {
         className="bg-white p-6 rounded-xl shadow-lg border border-[#11453B]/10 hover:shadow-md transition-all duration-300"
       >
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-semibold text-[#11453B]">
+          <h3 className="text-xl font-semibold text-[#11453B]">
             User Activity Trends
           </h3>
         </div>
@@ -220,7 +220,7 @@ export default function ChartsAndTables({ roleData, users }) {
         className="bg-white p-6 rounded-xl shadow-lg border border-[#11453B]/10 hover:shadow-md transition-all duration-300"
       >
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-semibold text-[#11453B]">
+          <h3 className="text-xl font-semibold text-[#11453B]">
             Status Breakdown
           </h3>
         </div>

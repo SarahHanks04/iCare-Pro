@@ -13,6 +13,7 @@ import Loading from "../loading";
 import toast from "react-hot-toast";
 import SearchComponent from "../util/search";
 import Pagination from "../util/pagination";
+// import { logUserAction } from "../util/dashboard-util/userActions";
 
 export default function UserTable() {
   const dispatch = useDispatch();
@@ -54,19 +55,33 @@ export default function UserTable() {
     localStorage.setItem("localUsers", JSON.stringify(localUsers));
   };
 
-  const onEditStart = (user) => {
-    setEditingUserId(user.id);
-    reset({
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      role: user.role || "General Back Office",
-      status: user.status || "Active",
-      created_at: user.created_at
-        ? new Date(user.created_at).toISOString().split("T")[0]
-        : "2025-04-08",
-    });
-  };
+  
+  // const handleUserAdded = (newUser) => {
+  //   const updatedUsers = [newUser, ...users];
+  //   dispatch(setUsers(updatedUsers));
+  //   setFilteredUsers(updatedUsers);
+
+  //   const localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
+  //   localUsers.unshift(newUser);
+  //   localStorage.setItem("localUsers", JSON.stringify(localUsers));
+
+  //   
+  //   logUserAction("added", newUser);
+  // };
+
+  // const onEditStart = (user) => {
+  //   setEditingUserId(user.id);
+  //   reset({
+  //     first_name: user.first_name,
+  //     last_name: user.last_name,
+  //     email: user.email,
+  //     role: user.role || "General Back Office",
+  //     status: user.status || "Active",
+  //     created_at: user.created_at
+  //       ? new Date(user.created_at).toISOString().split("T")[0]
+  //       : "2025-04-08",
+  //   });
+  // };
 
   const onEditSave = async (data, userId) => {
     try {
@@ -102,6 +117,47 @@ export default function UserTable() {
       });
     }
   };
+
+  // Inside the onEditSave function
+  // const onEditSave = async (data, userId) => {
+  //   try {
+  //     const updatedUserData = {
+  //       first_name: data.first_name,
+  //       last_name: data.last_name,
+  //       email: data.email,
+  //       role: data.role,
+  //       status: data.status,
+  //       created_at: data.created_at,
+  //     };
+  //     const response = await updateUser(userId, updatedUserData);
+  //     const updatedUsers = users.map((user) =>
+  //       user.id === userId ? { ...user, ...response } : user
+  //     );
+  //     dispatch(setUsers(updatedUsers));
+  //     setFilteredUsers(updatedUsers);
+
+  //     const localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
+  //     const updatedLocalUsers = localUsers.map((user) =>
+  //       user.id === userId ? { ...user, ...response } : user
+  //     );
+  //     localStorage.setItem("localUsers", JSON.stringify(updatedLocalUsers));
+
+  //     // Log the action
+  //     logUserAction("updated", response, {
+  //       updatedFields: Object.keys(updatedUserData),
+  //     });
+
+  //     setEditingUserId(null);
+  //     reset();
+  //     toast.success("User updated successfully!", {
+  //       duration: 2000,
+  //     });
+  //   } catch (error) {
+  //     toast.error(`Failed to update user: ${error.message}`, {
+  //       duration: 3000,
+  //     });
+  //   }
+  // };
 
   const onEditCancel = () => {
     setEditingUserId(null);
@@ -350,3 +406,4 @@ export default function UserTable() {
     </div>
   );
 }
+
