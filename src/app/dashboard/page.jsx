@@ -92,17 +92,6 @@ export default function Dashboard() {
     <div className="bg-gray-100 min-h-screen p-6">
       {/* Header */}
       <div className="mb-6">
-        {/* <div className="flex items-center justify-between w-full">
-          <h1 className="text-2xl font-bold">{welcomeMessage}</h1>
-          <p className="text-sm text-gray-500">
-            {lastSeen
-              ? `Last Seen: ${lastSeen.toLocaleString("en-US", {
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                })}`
-              : "First Visit"}
-          </p>
-        </div> */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-2 sm:gap-4">
           <h1 className="text-xl sm:text-2xl font-bold text-center sm:text-left">
             {welcomeMessage}

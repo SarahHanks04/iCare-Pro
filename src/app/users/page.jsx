@@ -118,9 +118,9 @@ export default function Users() {
   const endIndex = startIndex + itemsPerPage;
   const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
 
-  const welcomeMessage = loggedInUser
-    ? `Welcome ${loggedInUser.name}`
-    : "Welcome User";
+  //   const welcomeMessage = loggedInUser
+  //     ? `Welcome ${loggedInUser.name}`
+  //     : "Welcome User";
 
   if (loading) return <Loading />;
   if (error)
@@ -128,7 +128,7 @@ export default function Users() {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">{welcomeMessage},</h2>
+      {/* <h2 className="text-2xl font-bold mb-6">{welcomeMessage},</h2> */}
 
       <div className="btn-group-container">
         <div className="btn-group">
