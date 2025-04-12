@@ -13,6 +13,7 @@ import Loading from "../loading";
 import toast from "react-hot-toast";
 import SearchComponent from "../util/search";
 import Pagination from "../util/pagination";
+import { logUserAction } from "../util/dashboard-util/userActions";
 
 export default function Users() {
   const dispatch = useDispatch();
@@ -52,20 +53,10 @@ export default function Users() {
     const localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
     localUsers.unshift(newUser);
     localStorage.setItem("localUsers", JSON.stringify(localUsers));
-  };
 
-  const onEditStart = (user) => {
-    setEditingUserId(user.id);
-    reset({
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      role: user.role || "General Back Office",
-      status: user.status || "Active",
-      created_at: user.created_at
-        ? new Date(user.created_at).toISOString().split("T")[0]
-        : "2025-04-08",
-    });
+    // Log the action
+    console.log("Logging add action for user:", newUser);
+    logUserAction("added", newUser);
   };
 
   const onEditSave = async (data, userId) => {
@@ -91,6 +82,11 @@ export default function Users() {
       );
       localStorage.setItem("localUsers", JSON.stringify(updatedLocalUsers));
 
+      // Log the action
+      logUserAction("updated", response, {
+        updatedFields: Object.keys(updatedUserData),
+      });
+
       setEditingUserId(null);
       reset();
       toast.success("User updated successfully!", {
@@ -101,6 +97,20 @@ export default function Users() {
         duration: 3000,
       });
     }
+  };
+
+  const onEditStart = (user) => {
+    setEditingUserId(user.id);
+    reset({
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      role: user.role || "General Back Office",
+      status: user.status || "Active",
+      created_at: user.created_at
+        ? new Date(user.created_at).toISOString().split("T")[0]
+        : "2025-04-08",
+    });
   };
 
   const onEditCancel = () => {
@@ -118,18 +128,12 @@ export default function Users() {
   const endIndex = startIndex + itemsPerPage;
   const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
 
-  //   const welcomeMessage = loggedInUser
-  //     ? `Welcome ${loggedInUser.name}`
-  //     : "Welcome User";
-
   if (loading) return <Loading />;
   if (error)
     return <div className="text-red-500 text-center py-8">Error: {error}</div>;
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      {/* <h2 className="text-2xl font-bold mb-6">{welcomeMessage},</h2> */}
-
       <div className="btn-group-container">
         <div className="btn-group">
           <button className="btn admin-btn">ADMINISTRATION</button>

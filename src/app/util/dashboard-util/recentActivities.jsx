@@ -181,11 +181,11 @@ export default function RecentActivity({ recentUsers }) {
                       {action.actionType === "deleted" &&
                         `Deleted ${action.user.first_name} ${action.user.last_name}`}
                     </p>
-                    {action.details?.updatedFields && (
+                    {/* {action.details?.updatedFields && (
                       <p className="text-xs text-gray-500">
                         Updated: {action.details.updatedFields.join(", ")}
                       </p>
-                    )}
+                    )} */}
                   </div>
                 </div>
                 <div className="text-right">

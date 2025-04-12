@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 import SearchComponent from "../util/search";
 import Pagination from "../util/pagination";
 
-export default function UserTable() {
+export default function UsersTable() {
   const dispatch = useDispatch();
   const { users, loading, error } = useSelector((state) => state.users);
   const { user: loggedInUser } = useSelector((state) => state.auth);
@@ -52,6 +52,20 @@ export default function UserTable() {
     const localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
     localUsers.unshift(newUser);
     localStorage.setItem("localUsers", JSON.stringify(localUsers));
+  };
+
+  const onEditStart = (user) => {
+    setEditingUserId(user.id);
+    reset({
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      role: user.role || "General Back Office",
+      status: user.status || "Active",
+      created_at: user.created_at
+        ? new Date(user.created_at).toISOString().split("T")[0]
+        : "2025-04-08",
+    });
   };
 
   const onEditSave = async (data, userId) => {
