@@ -93,7 +93,7 @@ export default function Dashboard() {
       {/* Header */}
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-2 sm:gap-4">
-          <h1 className="text-xl sm:text-2xl font-bold text-center sm:text-left">
+          <h1 className="text-xl sm:text-2xl font-bold text-center sm:text-left text-[#11453B]">
             {welcomeMessage}
           </h1>
           <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-right">

@@ -150,7 +150,7 @@ export default function Register() {
                   onChange={() => setShowPassword(!showPassword)}
                   className="mr-2"
                 />
-                <label className="text-sm text-gray-600 text-black">Show Password</label>
+                <label className="text-sm text-black">Show Password</label>
               </div>
               <button
                 type="submit"
