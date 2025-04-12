@@ -86,7 +86,7 @@ export default function Register() {
                   type="text"
                   name="name"
                   className="w-full p-2 border rounded"
-                  placeholder="Enter your name... focus:outline-none"
+                  placeholder="Enter your name... "
                 />
                 <ErrorMessage
                   name="name"
