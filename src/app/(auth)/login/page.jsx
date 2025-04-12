@@ -56,7 +56,9 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-[#11453B]">
+          Login
+        </h2>
 
         <Formik
           initialValues={initialValues}
@@ -65,7 +67,7 @@ export default function Login() {
         >
           {({ isSubmitting }) => (
             <Form className="space-y-4">
-              <div>
+              <div className="text-black">
                 <label htmlFor="email" className="block text-sm font-medium">
                   Email
                 </label>
@@ -80,7 +82,7 @@ export default function Login() {
                   className="text-red-500 text-sm"
                 />
               </div>
-              <div>
+              <div className="text-black">
                 <label htmlFor="password" className="block text-sm font-medium">
                   Password
                 </label>
@@ -115,7 +117,7 @@ export default function Login() {
           )}
         </Formik>
         {error && <div className="mt-4 text-red-500 text-center">{error}</div>}
-        <p className="mt-5 text-center">
+        <p className="mt-5 text-center text-black">
           Don't have an account?{" "}
           <a href="/register" className="text-[#11453B] hover:underline">
             Register

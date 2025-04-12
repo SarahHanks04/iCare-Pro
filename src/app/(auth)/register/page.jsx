@@ -68,7 +68,9 @@ export default function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-[#11453B]">
+          Register
+        </h2>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -76,7 +78,8 @@ export default function Register() {
         >
           {({ isSubmitting }) => (
             <Form className="space-y-4">
-              <div>
+              <div className="text-black"
+              >
                 <label htmlFor="name" className="block text-sm font-medium">
                   Name
                 </label>
@@ -92,7 +95,7 @@ export default function Register() {
                   className="text-red-500 text-sm"
                 />
               </div>
-              <div>
+              <div className="text-black">
                 <label htmlFor="email" className="block text-sm font-medium">
                   Email
                 </label>
@@ -107,7 +110,7 @@ export default function Register() {
                   className="text-red-500 text-sm"
                 />
               </div>
-              <div>
+              <div className="text-black">
                 <label htmlFor="password" className="block text-sm font-medium">
                   Password
                 </label>
@@ -122,7 +125,7 @@ export default function Register() {
                   className="text-red-500 text-sm"
                 />
               </div>
-              <div>
+              <div className="text-black">
                 <label
                   htmlFor="confirmPassword"
                   className="block text-sm font-medium"
@@ -147,7 +150,7 @@ export default function Register() {
                   onChange={() => setShowPassword(!showPassword)}
                   className="mr-2"
                 />
-                <label className="text-sm text-gray-600">Show Password</label>
+                <label className="text-sm text-gray-600 text-black">Show Password</label>
               </div>
               <button
                 type="submit"
@@ -163,7 +166,7 @@ export default function Register() {
         {success && (
           <div className="mt-4 text-[#11453B] text-center">{success}</div>
         )}
-        <p className="mt-5 text-center">
+        <p className="mt-5 text-center text-black">
           Already have an account?{" "}
           <a href="/login" className="text-[#11453B] hover:underline">
             Login
