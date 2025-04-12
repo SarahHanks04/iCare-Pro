@@ -78,8 +78,7 @@ export default function Register() {
         >
           {({ isSubmitting }) => (
             <Form className="space-y-4">
-              <div className="text-black"
-              >
+              <div className="text-black">
                 <label htmlFor="name" className="block text-sm font-medium">
                   Name
                 </label>
