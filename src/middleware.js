@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-const protectedRoutes = ["/", "/profile", "/user/[id]"];
+const protectedRoutes = ["/", "/profile", "/user/[id]", "/users", "actions", "/actions/:path*", "/dashboard", "/dashboard/:path*"];
 const publicRoutes = ["/login", "/register"];
 
 export default async function middleware(req) {
@@ -39,5 +39,5 @@ export default async function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/", "/login", "/register", "/profile/:path*", "/user/:path*"],
+  matcher: ["/", "/login", "/register", "/profile/:path*", "/user/:path*", "/users/:path*", "/actions/:path*", "/dashboard/:path*"],
 };
