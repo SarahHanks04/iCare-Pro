@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { loginUser } from "../../_lib/api";
+import { loginUser, cleanUpExpiredUsers } from "../../_lib/api"; 
 import { loginSuccess } from "../../redux/slices/authSlice";
 
 export default function Login() {
@@ -21,6 +21,8 @@ export default function Login() {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
+      cleanUpExpiredUsers();
+
       const response = await loginUser(values.email, values.password);
       console.log("Login Response:", response);
 

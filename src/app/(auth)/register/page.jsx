@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { registerUser } from "../../_lib/api";
+import { registerUser, cleanUpExpiredUsers } from "../../_lib/api";
 import { useDispatch } from "react-redux";
 
 export default function Register() {
@@ -24,7 +24,14 @@ export default function Register() {
     name: Yup.string().required("Required"),
     email: Yup.string().email("Invalid email address").required("Required"),
     password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
+      .min(8, "Password must be at least 8 characters")
+      .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+      .matches(/[0-9]/, "Password must contain at least one number")
+      .matches(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Password must contain at least one special character"
+      )
       .required("Required"),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords must match")
@@ -33,6 +40,7 @@ export default function Register() {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
+      cleanUpExpiredUsers();
       const response = await registerUser(values.email, values.password);
 
       const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
@@ -45,6 +53,7 @@ export default function Register() {
         email: values.email,
         name: values.name,
         password: values.password,
+        createdAt: new Date().toISOString(),
       };
 
       if (existingUserIndex !== -1) {

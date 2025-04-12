@@ -18,13 +18,28 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+export const cleanUpExpiredUsers = () => {
+  const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
+  const now = new Date();
+  const expirationTime = 24 * 60 * 60 * 1000;
+
+  const validUsers = mockedUsers.filter((user) => {
+    const createdAt = new Date(user.createdAt);
+    const timeElapsed = now - createdAt;
+    return timeElapsed <= expirationTime;
+  });
+
+  localStorage.setItem("mockedUsers", JSON.stringify(validUsers));
+  return validUsers;
+};
+
 export const loginUser = async (email, password) => {
   try {
     const response = await api.post("/login", { email, password });
     return response.data;
   } catch (error) {
     console.error("Login error:", error.response?.data || error.message);
-    const mockedUsers = JSON.parse(localStorage.getItem("mockedUsers")) || [];
+    const mockedUsers = cleanUpExpiredUsers();
     const user = mockedUsers.find(
       (u) => u.email === email && u.password === password
     );
@@ -58,6 +73,7 @@ export const registerUser = async (email, password) => {
         "Note: Only defined users succeed registration"
     ) {
       console.log("Mocking successful registration for:", email);
+      cleanUpExpiredUsers();
       const newUser = {
         id: Math.floor(Math.random() * 1000).toString(),
         email,

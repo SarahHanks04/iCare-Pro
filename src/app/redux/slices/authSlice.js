@@ -24,7 +24,6 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       localStorage.removeItem("token");
-      localStorage.removeItem("mockedUsers");
       if (email) {
         localStorage.removeItem(`avatar-${email}`);
         localStorage.removeItem(`phone-${email}`);
